@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, JoinColumn, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, JoinColumn, ManyToOne, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm'
 import { Campaign } from './Campaign';
+import { Ad } from './Ad';
 
 @Entity()
 export class Adgroup extends BaseEntity {
@@ -14,6 +15,15 @@ export class Adgroup extends BaseEntity {
   })
   @JoinColumn({ name: "campaignId" })
   readonly campaign?: Campaign;
+
+  @OneToMany(type => Ad, ad => ad.adgroup)
+  private _ads: Ad[];
+  public get ads(): Ad[] {
+    return this._ads;
+  }
+  public set ads(value: Ad[]) {
+    this._ads = value;
+  }
 
   @Column()
   public name: string = ''
@@ -32,5 +42,3 @@ export class Adgroup extends BaseEntity {
     this.campaignId = campaignId;
   }
 }
-
-export default Adgroup
